@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifelink/screens/onboarding/onboarding_screen.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 
 class Welcome extends StatelessWidget {
@@ -55,6 +56,14 @@ class Welcome extends StatelessWidget {
                             color: Colors.white,
                           ),
                           buttonLabel: 'Donate now',
+                          onTapped: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const OnboardingScreen(),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],

@@ -42,14 +42,18 @@ class _ProfileState extends State<Profile> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 246, 225, 224),
+                        color: const Color.fromARGB(255, 242, 235, 234),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: EdgeInsets.all(5),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 6,
+                      ),
                       child: Text(
                         "0+  BLOOD GROUP",
                         style: TextStyle(
-                          fontWeight: FontWeight.w500
+                          fontWeight: FontWeight.w500,
+                          color: Colors.red
                         ),
                       ),
                     ),
@@ -60,14 +64,19 @@ class _ProfileState extends State<Profile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
+                          height: 80,
                           width: 100,
                           padding: EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 247, 244, 244),
-                            borderRadius: BorderRadius.circular(10)
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                            color: Colors.grey.withOpacity(0.4),
+                            width: 1,
+                          ),
             
                           ),
                           child:Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [ 
                               Text(
                                 "8",
@@ -92,13 +101,18 @@ class _ProfileState extends State<Profile> {
                           ), 
                         ),
                         Container(
+                          height: 80,
                           width: 100,
                           padding: EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 245, 245, 245),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                            color: Colors.grey.withOpacity(0.4),
+                            width: 1,
+                          ),
                           ),
                           child:Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 "Sept15",
@@ -106,6 +120,8 @@ class _ProfileState extends State<Profile> {
                                   fontSize: 17,
                                   fontWeight: FontWeight.w700
                                 ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                               Text("LAST"),
                               Text("DONATION"),
@@ -113,19 +129,28 @@ class _ProfileState extends State<Profile> {
                           ), 
                         ),
                         Container(
+                          height: 80,
                           width: 80,
                           padding: EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 240, 237, 237),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.grey.withOpacity(0.4),
+                              width: 1,
+                            ),
                           ),
                           child:Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.location_on_rounded,
                                 color: Colors.green,
                               ),
-                              Text("SEATTLE")
+                              Text(
+                                "SEATTLE",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              )
                             ],
                           ), 
                         ),
@@ -136,8 +161,12 @@ class _ProfileState extends State<Profile> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 241, 240, 240),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.4),
+                          width: 1,
+                        ),
+
                       ),
                       width: double.infinity,
                       padding: EdgeInsets.all(25),
@@ -152,7 +181,7 @@ class _ProfileState extends State<Profile> {
                                 child: CircularProgressIndicator(
                                   value: 1,
                                   strokeWidth: 16,
-                                  color: const Color.fromARGB(255, 185, 183, 183),
+                                  color: const Color.fromARGB(255, 225, 223, 223),
                                 ),
                               ),
                               SizedBox(

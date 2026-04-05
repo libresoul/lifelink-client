@@ -61,149 +61,199 @@ class _EditProfileState extends State<EditProfile> {
                       height: 30,
                     ),
                     Text("Full Name"),
-                    TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
-                        )
+                    SizedBox(
+                      height: 45,
+                      child: TextField(
+                        controller: nameController,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          isDense: true,
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text("Email"),
-                    TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
-                        )
+                    SizedBox(
+                      height: 45,
+                      child: TextField(
+                        controller: emailController,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          isDense: true
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text("Phone Number"),
-                    TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
-                        )
+                    SizedBox(
+                      height: 45,
+                      child: TextField(
+                        controller: emailController,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          isDense: true
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text("District"),
-                    DropdownButtonFormField<String>(
-                      hint: Text("select District"),
-                      value:selectDescrict,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
-                        )
+                    SizedBox(
+                      height: 45 ,
+                      child: DropdownButtonFormField<String>(
+                        isDense: true,
+                        hint: Text("select District"),
+                        value:selectDescrict,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 12,
+                          ),
+                        ),
+                        items: ['colombo','Gampaha']
+                          .map((item)=>DropdownMenuItem(
+                            value: item,
+                            child: Text(item)
+                          ))
+                          .toList(),
+                        onChanged: (value){
+                          setState(() {
+                            selectDescrict=value;
+                          });
+                        }
                       ),
-                      items: ['colombo','Gampaha']
-                        .map((item)=>DropdownMenuItem(
-                          value: item,
-                          child: Text(item)
-                        ))
-                        .toList(),
-                      onChanged: (value){
-                        setState(() {
-                          selectDescrict=value;
-                        });
-                      }
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text("Blood Type"),
-                    DropdownButtonFormField<String>(
-                      hint: Text("select Blood Type"),
-                      value:BloodType,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
-                        )
+                    SizedBox(
+                      height: 45,
+                      child: DropdownButtonFormField<String>(
+                        isDense: true,
+                        hint: Text("select Blood Type"),
+                        value:BloodType,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 12,
+                          ),
+                        ),
+                        items: ['A','A+']
+                          .map((item)=>DropdownMenuItem(
+                            value: item,
+                            child: Text(item)
+                          ))
+                          .toList(),
+                        onChanged: (value){
+                          setState(() {
+                            BloodType=value;
+                          });
+                        }
                       ),
-                      items: ['A','A+']
-                        .map((item)=>DropdownMenuItem(
-                          value: item,
-                          child: Text(item)
-                        ))
-                        .toList(),
-                      onChanged: (value){
-                        setState(() {
-                          BloodType=value;
-                        });
-                      }
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text("Gender"),
-                    DropdownButtonFormField<String>(
-                      hint: Text("select Gender"),
-                      value:Gender,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
-                        )
+                    SizedBox(
+                      height: 45,
+                      child: DropdownButtonFormField<String>(
+                        isDense: true,
+                        hint: Text("select Gender"),
+                        value:Gender,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 12,
+                          ),
+                        ),
+                        items: ['Male','Female','Other']
+                          .map((item)=>DropdownMenuItem(
+                            value: item,
+                            child: Text(item)
+                          ))
+                          .toList(),
+                        onChanged: (value){
+                          setState(() {
+                            Gender=value;
+                          });
+                        }
                       ),
-                      items: ['Male','Female','Other']
-                        .map((item)=>DropdownMenuItem(
-                          value: item,
-                          child: Text(item)
-                        ))
-                        .toList(),
-                      onChanged: (value){
-                        setState(() {
-                          Gender=value;
-                        });
-                      }
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text("Date of Birth"),
-                    TextField(
-                      controller: dateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
+                    SizedBox(
+                      height: 45,
+                      child: TextField(
+                        controller: dateController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          suffixIcon: Icon(Icons.calendar_today),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 12,
+                          ),
                         ),
-                        suffixIcon: Icon(Icons.calendar_today),
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime(2000),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(), // prevents future dates
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              dateController.text =
+                                  "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
+                            });
+                          }
+                      
+                        },
                       ),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime(2000),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now(), // prevents future dates
-                        );
-                        if (pickedDate != null) {
-                          setState(() {
-                            dateController.text =
-                                "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
-                          });
-                        }
-
-                      },
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text("Weight(Kg)"),
-                    TextField(
-                      controller: weightController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13)
-                        )
+                    SizedBox(
+                      height: 45,
+                      child: TextField(
+                        controller: weightController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          isDense: true
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -218,7 +268,7 @@ class _EditProfileState extends State<EditProfile> {
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(13),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: Text("Save Changes"),

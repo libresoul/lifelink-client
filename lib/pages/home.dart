@@ -19,6 +19,7 @@ class Homepage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
+                    height: 1.0
                   ),
                 ),
                 Row(
@@ -71,7 +72,8 @@ class Homepage extends StatelessWidget {
                             "You can donate",
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
-                              fontSize: 25
+                              fontSize: 25,
+                              height: 1.0
                             ),
                           ),
                           Text(
@@ -116,7 +118,7 @@ class Homepage extends StatelessWidget {
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.black,
+                      color: Colors.grey.withOpacity(0.4),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(10)
@@ -145,16 +147,72 @@ class Homepage extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      Text("Apr 28,2026"),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.watch_later_outlined,
+                            color: Colors.grey,
+                            size: 16,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Apr 28, 2026",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: " • ",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                TextSpan(
+                                  text: "10 am - 4pm",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_rounded,
+                            color: Colors.grey,
+                            size: 16,
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: Text(
+                              "117/3 Gorge Gunawardhana Street,kurinagalla,srilanka",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13
+                            
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(
                         height: 4,
                       ),
-                      Text("117/3 Gorge Gunawardhana Street,"),
-                      Text("Baththaramulla"),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text("10 am - 4pm")
                     ],
                   ),
                 ),
@@ -174,9 +232,10 @@ class Homepage extends StatelessWidget {
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.black,
+                      color: Colors.grey.withOpacity(0.4),
                       width: 1,
                     ),
+                    
                     borderRadius: BorderRadius.circular(10)
                   ),
                   child: Column(
@@ -203,19 +262,76 @@ class Homepage extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      Text("Apr 28,2026"),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.watch_later_outlined,
+                            color: Colors.grey,
+                            size: 16,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Apr 28, 2026",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: " • ",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                TextSpan(
+                                  text: "10 am - 4pm",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_rounded,
+                            color: Colors.grey,
+                            size: 16,
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: Text(
+                              "117/3 Gorge Gunawardhana Street,kurinagalla,srilanka",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13
+                            
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(
                         height: 4,
                       ),
-                      Text("117/3 Gorge Gunawardhana Street,"),
-                      Text("Baththaramulla"),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text("10 am - 4pm")
                     ],
                   ),
                 ),
+                
 
               ],
             ),

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+enum IconDirection { left, right }
+
 class Buttonwithicon extends StatelessWidget {
   final Color buttonColor;
   final Color labelColor;
-  final Icon? buttonIcon;
+  final Widget? buttonIcon;
+  final IconDirection iconDirection;
   final String buttonLabel;
+  final ButtonStyle? buttonStyles;
   final VoidCallback onTapped;
 
   const Buttonwithicon({
@@ -12,7 +16,9 @@ class Buttonwithicon extends StatelessWidget {
     required this.buttonColor,
     required this.labelColor,
     this.buttonIcon,
+    this.iconDirection = IconDirection.right,
     required this.buttonLabel,
+    this.buttonStyles,
     this.onTapped = defaultAction,
   });
 
@@ -33,13 +39,19 @@ class Buttonwithicon extends StatelessWidget {
           ),
         ),
         backgroundColor: WidgetStatePropertyAll(buttonColor),
-      ),
+      ).merge(buttonStyles),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          if (buttonIcon != null && iconDirection == IconDirection.left) ...[
+            buttonIcon!,
+            SizedBox(width: 8.0),
+          ],
           Text(buttonLabel, style: TextStyle(color: labelColor, fontSize: 16)),
-          SizedBox(width: buttonIcon != null ? 8.0 : 0), // Optional spacing
-          ?buttonIcon,
+          if (buttonIcon != null && iconDirection == IconDirection.right) ...[
+            SizedBox(width: 8.0),
+            buttonIcon!,
+          ],
         ],
       ),
     );

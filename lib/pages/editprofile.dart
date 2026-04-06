@@ -67,10 +67,19 @@ class _EditProfileState extends State<EditProfile> {
                         controller: nameController,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
+
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
                           isDense: true,
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                         ),
                       ),
                     ),
@@ -84,10 +93,18 @@ class _EditProfileState extends State<EditProfile> {
                         controller: emailController,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
+                          
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
-                          isDense: true
+                          isDense: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                         ),
                       ),
                     ),
@@ -101,10 +118,18 @@ class _EditProfileState extends State<EditProfile> {
                         controller: emailController,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
+                          
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
-                          isDense: true
+                          isDense: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                         ),
                       ),
                     ),
@@ -115,16 +140,29 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(
                       height: 45 ,
                       child: DropdownButtonFormField<String>(
+
+                        dropdownColor: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                         isDense: true,
                         hint: Text("select District"),
                         value:selectDescrict,
+
                         decoration: InputDecoration(
+
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 12,
+                          ),
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                         ),
                         items: ['colombo','Gampaha']
@@ -147,19 +185,34 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(
                       height: 45,
                       child: DropdownButtonFormField<String>(
+
+                        dropdownColor: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                         isDense: true,
                         hint: Text("select Blood Type"),
                         value:BloodType,
+
                         decoration: InputDecoration(
+
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
+
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 12,
                           ),
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                         ),
-                        items: ['A','A+']
+                        items: ['A+','A-','B+','B-','AB+','AB-','o+','o-']
                           .map((item)=>DropdownMenuItem(
                             value: item,
                             child: Text(item)
@@ -179,16 +232,29 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(
                       height: 45,
                       child: DropdownButtonFormField<String>(
+
+                        dropdownColor: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+
                         isDense: true,
                         hint: Text("select Gender"),
                         value:Gender,
                         decoration: InputDecoration(
+
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 12,
+                          ),
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                         ),
                         items: ['Male','Female','Other']
@@ -214,6 +280,14 @@ class _EditProfileState extends State<EditProfile> {
                         controller: dateController,
                         readOnly: true,
                         decoration: InputDecoration(
+
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
@@ -249,6 +323,15 @@ class _EditProfileState extends State<EditProfile> {
                       child: TextField(
                         controller: weightController,
                         decoration: InputDecoration(
+
+                          
+                          filled: true,
+                          fillColor: Colors.grey[50],
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),

@@ -104,12 +104,7 @@ class _DonatePageState extends State<DonatePage> {
               onPressed: () {},
             ),
             title: const Text(
-              'LIFELINK',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.5,
-              ),
+              '',
             ),
             actions: [
               Padding(
@@ -224,6 +219,7 @@ class _DonatePageState extends State<DonatePage> {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -388,6 +384,7 @@ class _DonatePageState extends State<DonatePage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
                         backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
@@ -579,6 +576,7 @@ class _DonatePageState extends State<DonatePage> {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -745,6 +743,7 @@ class CampaignDetailPage extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
                         backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
@@ -914,6 +913,7 @@ class HistoryDetailPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
                   backgroundColor: Colors.red,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -956,6 +956,7 @@ class HistoryDetailPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

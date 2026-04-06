@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
+import 'donation_guide_screen.dart';
 
 void main() {
-  runApp(const App());
+  runApp(const DonationApp());
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+class DonationApp extends StatelessWidget {
+  const DonationApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Home());
-  }
-}
-
-class Home extends StatelessWidget {
-  const Home({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('LifeLink')),
-      body: Center(child: Text("LifeLink")),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Blood Donation App',
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFFDFDFD),
+        fontFamily: 'Roboto',
+      ),
+      home: const DonationGuideScreen(),
     );
   }
 }

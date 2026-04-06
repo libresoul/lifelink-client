@@ -8,7 +8,29 @@ class Profile extends StatefulWidget {
   State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
+  late final AnimationController _ringController;
+  late final Animation<double> _progress;
+
+  @override
+  void initState() {
+    super.initState();
+    _ringController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _progress = CurvedAnimation(
+      parent: _ringController,
+      curve: Curves.easeOutCubic,
+    );
+    _ringController.forward();
+  }
+
+  @override
+  void dispose() {
+    _ringController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,14 +64,18 @@ class _ProfileState extends State<Profile> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 246, 225, 224),
+                        color: const Color.fromARGB(255, 242, 235, 234),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: EdgeInsets.all(5),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 6,
+                      ),
                       child: Text(
                         "0+  BLOOD GROUP",
                         style: TextStyle(
-                          fontWeight: FontWeight.w500
+                          fontWeight: FontWeight.w500,
+                          color: Colors.red
                         ),
                       ),
                     ),
@@ -57,77 +83,94 @@ class _ProfileState extends State<Profile> {
                       height: 30,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: 100,
-                          padding: EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 247, 244, 244),
-                            borderRadius: BorderRadius.circular(10)
-            
+                        Expanded(
+                          child: Container(
+                            height: 90,
+                            padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.4),
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "8",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 20),
+                                ),
+                                Text(
+                                  "TOTAL",
+                                  style: TextStyle(fontWeight: FontWeight.w400),
+                                ),
+                                Text(
+                                  "DONATIONS",
+                                  style: TextStyle(fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
                           ),
-                          child:Column(
-                            children: [ 
-                              Text(
-                                "8",
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 20
-                                ),
-                              ),
-                              Text(
-                                "TOTAL",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400
-                                ),
-                              ),
-                              Text(
-                                "DONATIONS",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400
-                                ),
-                              ),
-                            ],
-                          ), 
                         ),
-                        Container(
-                          width: 100,
-                          padding: EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 245, 245, 245),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child:Column(
-                            children: [
-                              Text(
-                                "Sept15",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w700
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            height: 90,
+                            padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.4),
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Sept15",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
-                              ),
-                              Text("LAST"),
-                              Text("DONATION"),
-                            ],
-                          ), 
-                        ),
-                        Container(
-                          width: 80,
-                          padding: EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 240, 237, 237),
-                            borderRadius: BorderRadius.circular(10),
+                                Text("LAST"),
+                                Text("DONATION"),
+                              ],
+                            ),
                           ),
-                          child:Column(
-                            children: [
-                              Icon(
-                                Icons.location_on_rounded,
-                                color: Colors.green,
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            height: 90,
+                            padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.4),
+                                width: 1,
                               ),
-                              Text("SEATTLE")
-                            ],
-                          ), 
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.location_on_rounded,
+                                  color: Colors.green,
+                                ),
+                                Text(
+                                  "SEATTLE",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -136,39 +179,48 @@ class _ProfileState extends State<Profile> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 241, 240, 240),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.4),
+                          width: 1,
+                        ),
+
                       ),
-                      width: double.infinity,
-                      padding: EdgeInsets.all(25),
-                      child: Column(
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(25),
+                          child: Column(
                             children: [
-                              SizedBox(
-                                width: 150,
-                                height: 150,
-                                child: CircularProgressIndicator(
-                                  value: 1,
-                                  strokeWidth: 16,
-                                  color: const Color.fromARGB(255, 185, 183, 183),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 150,
-                                height: 150,
-                                child: CircularProgressIndicator(
-                                  value: 0.7,
-                                  strokeWidth: 16,
-                                  color: Colors.red,
-                                  strokeCap: StrokeCap.round,
-                                ),
-                              ),
-                              Column(
+                              Stack(
+                                alignment: Alignment.center,
                                 children: [
-                                  Text(
-                                    "12",
+                                  SizedBox(
+                                    width: 150,
+                                    height: 150,
+                                    child: CircularProgressIndicator(
+                                      value: 1,
+                                      strokeWidth: 16,
+                                      color: const Color.fromARGB(255, 225, 223, 223),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    height: 150,
+                                    child: AnimatedBuilder(
+                                      animation: _progress,
+                                      builder: (context, _) {
+                                        return CircularProgressIndicator(
+                                          value: 0.7 * _progress.value,
+                                          strokeWidth: 16,
+                                          color: Colors.red,
+                                          strokeCap: StrokeCap.round,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "12",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 25

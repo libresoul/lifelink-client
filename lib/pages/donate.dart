@@ -167,37 +167,41 @@ class _DonatePageState extends State<DonatePage>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF6F7FB),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          leadingWidth: 0,
-          automaticallyImplyLeading: false,
-          title: const Text(
-            '',
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF6F7FB),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            centerTitle: true,
+            leadingWidth: 0,
+            automaticallyImplyLeading: false,
+            title: const Text(
+              '',
+            ),
+            actions: const [],
+            bottom: const TabBar(
+              labelColor: Colors.red,
+              unselectedLabelColor: Colors.black54,
+              indicatorColor: Colors.red,
+              tabs: [
+                Tab(text: 'Campaigns'),
+                Tab(text: 'Explore'),
+                Tab(text: 'History'),
+              ],
+            ),
           ),
-          actions: const [],
-          bottom: const TabBar(
-            labelColor: Colors.red,
-            unselectedLabelColor: Colors.black54,
-            indicatorColor: Colors.red,
-            tabs: [
-              Tab(text: 'Campaigns'),
-              Tab(text: 'Explore'),
-              Tab(text: 'History'),
+          body: TabBarView(
+            children: [
+              _campaignsTab(),
+              _exploreTab(),
+              _historyTab(),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            _campaignsTab(),
-            _exploreTab(),
-            _historyTab(),
-          ],
         ),
       ),
     );

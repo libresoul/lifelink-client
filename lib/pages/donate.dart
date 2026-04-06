@@ -176,23 +176,12 @@ class _DonatePageState extends State<DonatePage>
             backgroundColor: Colors.white,
             elevation: 0,
             centerTitle: true,
-            leading: IconButton(
-              icon: const Icon(Icons.menu, color: Colors.black87),
-              onPressed: () {},
-            ),
+            leadingWidth: 0,
+            automaticallyImplyLeading: false,
             title: const Text(
               '',
             ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: Colors.grey.shade200,
-                  child: const Icon(Icons.person, color: Colors.black87),
-                ),
-              )
-            ],
+            actions: const [],
             bottom: const TabBar(
               labelColor: Colors.red,
               unselectedLabelColor: Colors.black54,
@@ -299,7 +288,7 @@ class _DonatePageState extends State<DonatePage>
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -465,14 +454,14 @@ class _DonatePageState extends State<DonatePage>
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
                       onPressed: () => _openDetails(item),
                       child: const Text(
                         'Donate Now',
@@ -912,16 +901,16 @@ class CampaignDetailPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18, vertical: 14),
-                      ),
-                      onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 18, vertical: 14),
+                ),
+                onPressed: () {},
                       icon: const Icon(Icons.bolt),
                       label: const Text(
                         'Schedule Donation',
@@ -1086,7 +1075,7 @@ class HistoryDetailPage extends StatelessWidget {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.red,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 18, vertical: 14),

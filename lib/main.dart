@@ -15,7 +15,7 @@ class DonationApp extends StatelessWidget {
       title: 'Blood Donation App',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFFDFDFD),
-        fontFamily: 'Roboto', // Ensure you have a clean sans-serif font
+        fontFamily: 'Roboto',
       ),
       home: const DonationGuideScreen(),
     );

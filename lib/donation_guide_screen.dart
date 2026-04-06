@@ -160,16 +160,7 @@ class DonationGuideScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.blue[800],
-        unselectedItemColor: Colors.grey,
-        currentIndex: 1, // "Donate" is active
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.star_outline), label: 'Donate'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Me'),
-        ],
-      ),
+
     );
   }
 }

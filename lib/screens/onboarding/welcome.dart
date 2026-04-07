@@ -51,6 +51,7 @@ class Welcome extends StatelessWidget {
                       Expanded(
                         child: Buttonwithicon(
                           buttonColor: Color(0xFFE71B1E),
+                          labelColor: Colors.white,
                           buttonIcon: Icon(
                             Icons.arrow_forward,
                             color: Colors.white,

@@ -32,6 +32,7 @@ class Buttonwithicon extends StatelessWidget {
     return TextButton(
       onPressed: onTapped,
       style: ButtonStyle(
+
         padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 16.0)),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(

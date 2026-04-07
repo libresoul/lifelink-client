@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifelink/screens/onboarding/welcome.dart';
 
 void main() {
   runApp(const App());
@@ -18,9 +19,16 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: Text('LifeLink')),
-      body: Center(child: Text("LifeLink")),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: width * 0.08,
+          vertical: height * 0.06,
+        ),
+        child: Welcome(),
+      ),
     );
   }
 }

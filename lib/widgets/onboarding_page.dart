@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lifelink/screens/onboarding/onboarding_page_data.dart';
+import 'package:lifelink/data/onboarding/onboarding_page_data.dart';
 
-class OnboardingPageWidget extends StatelessWidget{
+class OnboardingPageWidget extends StatelessWidget {
   final OnboardingPageData data;
-  const OnboardingPageWidget ({super.key, required this.data});
+  const OnboardingPageWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +21,14 @@ class OnboardingPageWidget extends StatelessWidget{
             ),
             textAlign: TextAlign.center,
           ),
-          Image.asset(
-            data.imagePath,
-            height: 260,
-            fit: BoxFit.contain,
-          ),
+          Image.asset(data.imagePath, height: 260, fit: BoxFit.contain),
           const SizedBox(height: 15),
           Text(
             data.title,
             style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color:Color.fromARGB(255, 83, 83, 83),
+              color: Color.fromARGB(255, 83, 83, 83),
             ),
             textAlign: TextAlign.center,
           ),
@@ -52,4 +48,6 @@ class OnboardingPageWidget extends StatelessWidget{
         ],
       ),
     );
-}}
+  }
+}
+

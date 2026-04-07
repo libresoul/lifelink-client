@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lifelink/screens/onboarding/onboarding_page_data.dart';
-import 'package:lifelink/widgets/onboarding_page_widget.dart';
+import 'package:lifelink/data/onboarding/onboarding_page_data.dart';
+import 'package:lifelink/widgets/onboarding_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

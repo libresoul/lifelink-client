@@ -56,14 +56,6 @@ class Welcome extends StatelessWidget {
                             color: Colors.white,
                           ),
                           buttonLabel: 'Donate now',
-                          onTapped: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const OnboardingScreen(),
-                              ),
-                            );
-                          },
                         ),
                       ),
                     ],

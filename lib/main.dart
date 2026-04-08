@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifelink/screens/onboarding/signup.dart';
 import 'package:lifelink/screens/onboarding/welcome.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class Home extends StatelessWidget {
           horizontal: width * 0.08,
           vertical: height * 0.06,
         ),
-        child: Welcome(),
+        child: Signup(),
       ),
     );
   }

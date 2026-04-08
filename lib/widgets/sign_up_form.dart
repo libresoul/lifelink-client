@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lifelink/core/network/api_client.dart';
+import 'package:lifelink/core/storage/onboarding_draft_store.dart';
 import 'package:lifelink/widgets/loading_button.dart';
 
 class SignUpForm extends StatefulWidget {
-  final VoidCallback onSubmit;
+  final ValueChanged<String> onSubmit;
   const SignUpForm({super.key, required this.onSubmit});
 
   @override
@@ -12,6 +13,7 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final formKey = GlobalKey<FormState>();
+  final _draftStore = OnboardingDraftStore();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -145,12 +147,13 @@ class _SignUpFormState extends State<SignUpForm> {
 
     try {
       final api = ApiClient('http://192.168.240.1:8787');
-      await api.register(
+      final userId = await api.register(
         fullname: _nameController.text.trim(),
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      widget.onSubmit();
+      await _draftStore.saveUserId(userId);
+      widget.onSubmit(userId);
     } catch (e) {
       if (!mounted) {
         return;

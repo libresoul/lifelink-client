@@ -5,7 +5,9 @@ import 'package:lifelink/screens/onboarding/onboarding_health_profile_page.dart'
 import 'package:lifelink/widgets/onboarding_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  final String userId;
+
+  const OnboardingScreen({super.key, required this.userId});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -14,6 +16,8 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  String? _phoneNumber;
+  String? _district;
 
   static const int _totalPages = 5;
 
@@ -31,7 +35,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     setState(() => _currentPage = index);
   }
 
-  void _goToHealthProfilePage() {
+  void _goToHealthProfilePage(String phoneNumber, String district) {
+    _phoneNumber = phoneNumber;
+    _district = district;
+
     _pageController.animateToPage(
       4,
       duration: const Duration(milliseconds: 300),
@@ -82,7 +89,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     );
                   }
 
-                  return const OnboardingHealthProfilePage();
+                  return OnboardingHealthProfilePage(
+                    userId: widget.userId,
+                    phoneNumber: _phoneNumber,
+                    district: _district,
+                  );
                 },
               ),
             ),

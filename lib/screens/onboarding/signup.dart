@@ -103,10 +103,10 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  void _onSubmit() {
+  void _onSubmit(String userId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+      MaterialPageRoute(builder: (context) => OnboardingScreen(userId: userId)),
     );
   }
 }

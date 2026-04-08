@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifelink/core/storage/onboarding_draft_store.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 
 class OnboardingContactDetailsPage extends StatefulWidget {
-  final VoidCallback onContinue;
+  final void Function(String phoneNumber, String district) onContinue;
 
   const OnboardingContactDetailsPage({super.key, required this.onContinue});
 
@@ -15,6 +16,7 @@ class OnboardingContactDetailsPage extends StatefulWidget {
 class _OnboardingContactDetailsPageState
     extends State<OnboardingContactDetailsPage> {
   final _formKey = GlobalKey<FormState>();
+  final _draftStore = OnboardingDraftStore();
   final _phoneController = TextEditingController(text: '+94');
 
   final List<String> _districts = const [
@@ -39,9 +41,13 @@ class _OnboardingContactDetailsPageState
     return phoneRegex.hasMatch(value.trim());
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
-      widget.onContinue();
+      await _draftStore.saveContactDetails(
+        phoneNumber: _phoneController.text.trim(),
+        district: _selectedDistrict,
+      );
+      widget.onContinue(_phoneController.text.trim(), _selectedDistrict);
     }
   }
 

@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifelink/core/network/api_client.dart';
+import 'package:lifelink/core/storage/onboarding_draft_store.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 
 class OnboardingHealthProfilePage extends StatefulWidget {
-  const OnboardingHealthProfilePage({super.key});
+  final String userId;
+  final String? phoneNumber;
+  final String? district;
+
+  const OnboardingHealthProfilePage({
+    super.key,
+    required this.userId,
+    required this.phoneNumber,
+    required this.district,
+  });
 
   @override
   State<OnboardingHealthProfilePage> createState() =>
@@ -13,8 +24,12 @@ class OnboardingHealthProfilePage extends StatefulWidget {
 class _OnboardingHealthProfilePageState
     extends State<OnboardingHealthProfilePage> {
   final _formKey = GlobalKey<FormState>();
+  final _draftStore = OnboardingDraftStore();
   final _dobController = TextEditingController();
   final _weightController = TextEditingController(text: '60');
+  final _api = ApiClient('http://192.168.240.1:8787');
+
+  bool _isSubmitting = false;
 
   String? _selectedBloodType;
   String? _selectedGender;
@@ -73,7 +88,11 @@ class _OnboardingHealthProfilePageState
     return _bloodTypeError == null && _genderError == null;
   }
 
-  void _submit() {
+  Future<void> _submit() async {
+    if (_isSubmitting) {
+      return;
+    }
+
     final isFormValid = _formKey.currentState!.validate();
     final hasValidSelections = _validateSelections();
 
@@ -81,10 +100,76 @@ class _OnboardingHealthProfilePageState
       return;
     }
 
-    debugPrint(
-      'Health profile: bloodType=$_selectedBloodType, gender=$_selectedGender, '
-      'dob=${_dobController.text}, weight=${_weightController.text}',
-    );
+    final rawDob = _dobController.text.trim();
+    final dobParts = rawDob.split('/');
+    if (dobParts.length != 3) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Invalid date of birth')));
+      return;
+    }
+
+    final yyyyMmDd = '${dobParts[2]}-${dobParts[1]}-${dobParts[0]}';
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final userId = widget.userId.isNotEmpty
+          ? widget.userId
+          : await _draftStore.getUserId();
+      final phoneNumber =
+          widget.phoneNumber ?? await _draftStore.getPhoneNumber();
+      final district = widget.district ?? await _draftStore.getDistrict();
+
+      if (userId == null || phoneNumber == null || district == null) {
+        if (!mounted) {
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Missing onboarding details. Please try again.'),
+          ),
+        );
+        return;
+      }
+
+      await _api.registerDetails(
+        userId: userId,
+        phoneNumber: phoneNumber,
+        district: district,
+        bloodType: _selectedBloodType!,
+        gender: _selectedGender!,
+        dateOfBirth: yyyyMmDd,
+        weightKg: double.parse(_weightController.text.trim()),
+      );
+
+      await _draftStore.clear();
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Donor details saved successfully')),
+      );
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
   }
 
   Widget _buildChoiceButton({
@@ -279,7 +364,7 @@ class _OnboardingHealthProfilePageState
             ),
             const SizedBox(height: 28),
             Buttonwithicon(
-              buttonLabel: 'Continue',
+              buttonLabel: _isSubmitting ? 'Saving...' : 'Continue',
               buttonColor: const Color(0xFFE71B1E),
               labelColor: Colors.white,
               onTapped: _submit,

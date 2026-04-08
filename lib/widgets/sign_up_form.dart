@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifelink/screens/onboarding/onboarding_screen.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -98,8 +99,9 @@ class _SignUpFormState extends State<SignUpForm> {
 
   void _submit() {
     if (formKey.currentState!.validate()) {
-      print(
-        '${_nameController.text}, ${_emailController.text}, ${_passwordController.text}',
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
       );
     }
   }

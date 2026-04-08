@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifelink/core/network/api_client.dart';
 import 'package:lifelink/core/storage/session_store.dart';
+import 'package:lifelink/screens/auth/login.dart';
 import 'package:lifelink/screens/onboarding/onboarding_screen.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 import 'package:lifelink/widgets/sign_up_form.dart';
@@ -101,7 +102,12 @@ class _SignupState extends State<Signup> {
                       WidgetSpan(
                         child: GestureDetector(
                           onTap: () {
-                            print('Log in');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
                           },
                           child: Text(
                             'Log In',

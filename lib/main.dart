@@ -36,15 +36,7 @@ class HomeGate extends StatelessWidget {
           return const AppShell();
         }
 
-        return Scaffold(
-          body: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.08,
-              vertical: MediaQuery.of(context).size.height * 0.06,
-            ),
-            child: const Welcome(),
-          ),
-        );
+        return Welcome();
       },
     );
   }

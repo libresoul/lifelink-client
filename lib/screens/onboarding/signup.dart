@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lifelink/core/network/api_client.dart';
-import 'package:lifelink/core/storage/session_store.dart';
+// api_client and session_store are not used directly in this file.
+import 'package:lifelink/screens/auth/confirm_email.dart';
 import 'package:lifelink/screens/auth/login.dart';
-import 'package:lifelink/screens/onboarding/onboarding_screen.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 import 'package:lifelink/widgets/sign_up_form.dart';
 
@@ -16,8 +15,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  final _api = ApiClient();
-  final _sessionStore = SessionStore();
+  // ApiClient and SessionStore are created where needed (not stored here)
 
   @override
   Widget build(BuildContext context) {
@@ -131,34 +129,17 @@ class _SignupState extends State<Signup> {
   }
 
   Future<void> _onSubmit(String userId, String email, String password) async {
-    try {
-      final loginResponse = await _api.login(email: email, password: password);
-      await _sessionStore.save(
-        accessToken: loginResponse.accessToken,
-        refreshToken: loginResponse.refreshToken,
-        userId: loginResponse.userId,
-      );
-    } catch (_) {
-      if (!mounted) {
-        return;
-      }
+    if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Signed up, but automatic login failed. Please log in.',
-          ),
-        ),
-      );
-    }
-
-    if (!mounted) {
-      return;
-    }
-
+    // After registration we navigate to the email confirmation screen.
+    // The user should check their mailbox and click the verification link,
+    // then press Done which will attempt login.
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => OnboardingScreen(userId: userId)),
+      MaterialPageRoute(
+        builder: (context) =>
+            ConfirmEmailPage(email: email, password: password, userId: userId),
+      ),
     );
   }
 }

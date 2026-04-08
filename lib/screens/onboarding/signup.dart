@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifelink/screens/onboarding/onboarding_screen.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 import 'package:lifelink/widgets/sign_up_form.dart';
 
@@ -41,7 +42,7 @@ class _SignupState extends State<Signup> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 60.0, 0.0, 20.0),
-            child: SignUpForm(),
+            child: SignUpForm(onSubmit: _onSubmit),
           ),
           Row(
             children: [
@@ -99,6 +100,13 @@ class _SignupState extends State<Signup> {
           ),
         ],
       ),
+    );
+  }
+
+  void _onSubmit() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const OnboardingScreen()),
     );
   }
 }

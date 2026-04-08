@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _api = ApiClient('http://192.168.240.1:8787');
+  final _api = ApiClient();
   final _sessionStore = SessionStore();
 
   bool _isSubmitting = false;

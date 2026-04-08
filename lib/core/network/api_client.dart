@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:lifelink/core/config.dart';
 
 class LoginResponse {
   final String accessToken;
@@ -56,7 +57,8 @@ class DonorStats {
 class ApiClient {
   final String baseUrl;
 
-  ApiClient(this.baseUrl);
+  // If no baseUrl is provided, use the compile-time API_BASE_URL from config.
+  ApiClient([String? baseUrl]) : baseUrl = baseUrl ?? apiBaseUrl;
 
   Future<String> register({
     required String fullname,

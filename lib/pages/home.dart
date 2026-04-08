@@ -19,7 +19,7 @@ class _HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<_HomeContent> {
-  final _api = ApiClient('http://192.168.240.1:8787');
+  final _api = ApiClient();
   final _sessionStore = SessionStore();
   late Future<DonorProfile> _profileFuture;
 

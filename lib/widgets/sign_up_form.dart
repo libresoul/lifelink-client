@@ -146,7 +146,7 @@ class _SignUpFormState extends State<SignUpForm> {
     });
 
     try {
-      final api = ApiClient('http://192.168.240.1:8787');
+      final api = ApiClient();
       final userId = await api.register(
         fullname: _nameController.text.trim(),
         email: _emailController.text.trim(),

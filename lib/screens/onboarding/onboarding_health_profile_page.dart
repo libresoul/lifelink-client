@@ -28,7 +28,7 @@ class _OnboardingHealthProfilePageState
   final _draftStore = OnboardingDraftStore();
   final _dobController = TextEditingController();
   final _weightController = TextEditingController(text: '60');
-  final _api = ApiClient('http://192.168.240.1:8787');
+  final _api = ApiClient();
 
   bool _isSubmitting = false;
 

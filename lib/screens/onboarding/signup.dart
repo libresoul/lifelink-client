@@ -16,7 +16,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  final _api = ApiClient('http://192.168.240.1:8787');
+  final _api = ApiClient();
   final _sessionStore = SessionStore();
 
   @override

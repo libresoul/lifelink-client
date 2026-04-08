@@ -12,7 +12,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final _api = ApiClient('http://192.168.240.1:8787');
+  final _api = ApiClient();
   final _sessionStore = SessionStore();
   late Future<DonorProfile> _profileFuture;
 

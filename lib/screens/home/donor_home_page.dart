@@ -11,7 +11,7 @@ class DonorHomePage extends StatefulWidget {
 }
 
 class _DonorHomePageState extends State<DonorHomePage> {
-  final _api = ApiClient('http://192.168.240.1:8787');
+  final _api = ApiClient();
   final _sessionStore = SessionStore();
   late Future<DonorProfile> _profileFuture;
 

@@ -1,71 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:lifelink/pages/home.dart';
-import 'package:lifelink/pages/profile.dart';
+import 'package:lifelink/core/storage/session_store.dart';
+import 'package:lifelink/screens/home/app_shell.dart';
+import 'package:lifelink/screens/onboarding/welcome.dart';
 
 void main() {
   runApp(const App());
 }
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
 
   @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Home(),
-      debugShowCheckedModeBanner: false,
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: HomeGate());
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class HomeGate extends StatelessWidget {
+  HomeGate({super.key});
 
-  @override
-  State<Home> createState() => _HomeState();
-}
+  final _sessionStore = SessionStore();
 
-class _HomeState extends State<Home> {
-
-  int currentindex=0;
-  final List<Widget> pages = [
-    Homepage(),
-    Center(child: Text("Donate Page")),
-    Profile()
-  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return FutureBuilder<bool>(
+      future: _sessionStore.hasSession(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-      body: pages[currentindex],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index){
-          setState(() {
-            currentindex=index;
-          });
-        },
-        currentIndex: currentindex,
-        selectedItemColor: Colors.red,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home'
+        if (snapshot.data == true) {
+          return const AppShell();
+        }
+
+        return Scaffold(
+          body: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.08,
+              vertical: MediaQuery.of(context).size.height * 0.06,
+            ),
+            child: const Welcome(),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.stars_rounded),
-            label: 'Donate'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2),
-            label: 'Me'
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

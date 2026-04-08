@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lifelink/screens/onboarding/onboarding_screen.dart';
-import 'package:lifelink/widgets/button_with_icon.dart';
+import 'package:lifelink/core/network/api_client.dart';
+import 'package:lifelink/core/storage/onboarding_draft_store.dart';
+import 'package:lifelink/widgets/loading_button.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  final void Function(String userId, String email, String password) onSubmit;
+  const SignUpForm({super.key, required this.onSubmit});
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
@@ -11,10 +13,12 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final formKey = GlobalKey<FormState>();
+  final _draftStore = OnboardingDraftStore();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isObscured = true;
+  bool _isSubmitting = false;
   late FocusNode pwFocusNode;
 
   @override
@@ -81,7 +85,8 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
-            child: Buttonwithicon(
+            child: LoadingButton(
+              isLoading: _isSubmitting,
               buttonLabel: 'Continue',
               buttonColor: Color(0xFFe71b1e),
               labelColor: Colors.white,
@@ -127,12 +132,46 @@ class _SignUpFormState extends State<SignUpForm> {
     return passwordRegex.hasMatch(value);
   }
 
-  void _submit() {
-    if (formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+  Future<void> _submit() async {
+    if (_isSubmitting) {
+      return;
+    }
+
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final api = ApiClient('http://192.168.240.1:8787');
+      final userId = await api.register(
+        fullname: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
+      await _draftStore.saveUserId(userId);
+      widget.onSubmit(
+        userId,
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
     }
   }
 }

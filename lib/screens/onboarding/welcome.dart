@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifelink/screens/auth/login.dart';
 import 'package:lifelink/screens/onboarding/signup.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 
@@ -75,6 +76,14 @@ class Welcome extends StatelessWidget {
                         child: Buttonwithicon(
                           buttonColor: Color(0xFFF4C9CA),
                           labelColor: Color(0XFF2C2626),
+                          onTapped: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                            );
+                          },
                           buttonLabel: 'I already have an account',
                         ),
                       ),

@@ -22,16 +22,34 @@ class DonorProfile {
   final String? gender;
   final String? dateOfBirth;
   final String? weightKg;
+  final DonorStats stats;
 
   const DonorProfile({
     required this.fullName,
     required this.email,
+    required this.stats,
     this.phoneNumber,
     this.district,
     this.bloodType,
     this.gender,
     this.dateOfBirth,
     this.weightKg,
+  });
+}
+
+class DonorStats {
+  final int totalDonations;
+  final String? lastDonationDate;
+  final String? nextEligibleDate;
+  final int remainingDays;
+  final double eligibilityProgress;
+
+  const DonorStats({
+    required this.totalDonations,
+    required this.lastDonationDate,
+    required this.nextEligibleDate,
+    required this.remainingDays,
+    required this.eligibilityProgress,
   });
 }
 
@@ -157,9 +175,18 @@ class ApiClient {
     }
 
     final donor = body['donor'] as Map;
+    final stats = donor['stats'] is Map ? donor['stats'] as Map : const {};
+
     return DonorProfile(
       fullName: donor['full_name']?.toString() ?? '-',
       email: donor['email']?.toString() ?? '-',
+      stats: DonorStats(
+        totalDonations: _toInt(stats['total_donations']),
+        lastDonationDate: stats['last_donation_date']?.toString(),
+        nextEligibleDate: stats['next_eligible_date']?.toString(),
+        remainingDays: _toInt(stats['remaining_days']),
+        eligibilityProgress: _toDouble(stats['eligibility_progress']),
+      ),
       phoneNumber: donor['phone_number']?.toString(),
       district: donor['district']?.toString(),
       bloodType: donor['blood_type']?.toString(),
@@ -167,5 +194,21 @@ class ApiClient {
       dateOfBirth: donor['date_of_birth']?.toString(),
       weightKg: donor['weight_kg']?.toString(),
     );
+  }
+
+  int _toInt(dynamic value) {
+    if (value is int) {
+      return value;
+    }
+
+    return int.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  double _toDouble(dynamic value) {
+    if (value is num) {
+      return value.toDouble();
+    }
+
+    return double.tryParse(value?.toString() ?? '') ?? 0;
   }
 }

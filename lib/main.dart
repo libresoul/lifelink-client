@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lifelink/screens/onboarding/signup.dart';
+import 'package:lifelink/core/storage/session_store.dart';
+import 'package:lifelink/screens/home/donor_home_page.dart';
 import 'package:lifelink/screens/onboarding/welcome.dart';
 
 void main() {
@@ -11,25 +12,40 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Home());
+    return MaterialApp(home: HomeGate());
   }
 }
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomeGate extends StatelessWidget {
+  HomeGate({super.key});
+
+  final _sessionStore = SessionStore();
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: width * 0.08,
-          vertical: height * 0.06,
-        ),
-        child: Signup(),
-      ),
+    return FutureBuilder<bool>(
+      future: _sessionStore.hasSession(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.data == true) {
+          return const DonorHomePage();
+        }
+
+        return Scaffold(
+          body: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.08,
+              vertical: MediaQuery.of(context).size.height * 0.06,
+            ),
+            child: const Welcome(),
+          ),
+        );
+      },
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:lifelink/core/storage/onboarding_draft_store.dart';
 import 'package:lifelink/widgets/loading_button.dart';
 
 class SignUpForm extends StatefulWidget {
-  final ValueChanged<String> onSubmit;
+  final void Function(String userId, String email, String password) onSubmit;
   const SignUpForm({super.key, required this.onSubmit});
 
   @override
@@ -153,7 +153,11 @@ class _SignUpFormState extends State<SignUpForm> {
         password: _passwordController.text.trim(),
       );
       await _draftStore.saveUserId(userId);
-      widget.onSubmit(userId);
+      widget.onSubmit(
+        userId,
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
     } catch (e) {
       if (!mounted) {
         return;

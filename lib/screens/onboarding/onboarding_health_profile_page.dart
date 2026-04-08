@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifelink/core/network/api_client.dart';
 import 'package:lifelink/core/storage/onboarding_draft_store.dart';
-import 'package:lifelink/screens/home/donor_home_page.dart';
+import 'package:lifelink/screens/home/app_shell.dart';
 import 'package:lifelink/widgets/button_with_icon.dart';
 
 class OnboardingHealthProfilePage extends StatefulWidget {
@@ -159,7 +159,7 @@ class _OnboardingHealthProfilePageState
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const DonorHomePage()),
+        MaterialPageRoute(builder: (_) => const AppShell()),
       );
     } catch (e) {
       if (!mounted) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifelink/core/network/api_client.dart';
 import 'package:lifelink/core/storage/session_store.dart';
-import 'package:lifelink/screens/home/donor_home_page.dart';
+import 'package:lifelink/screens/home/app_shell.dart';
 import 'package:lifelink/widgets/loading_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const DonorHomePage()),
+        MaterialPageRoute(builder: (_) => const AppShell()),
       );
     } catch (e) {
       if (!mounted) {

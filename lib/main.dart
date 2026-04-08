@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifelink/core/storage/session_store.dart';
-import 'package:lifelink/screens/home/donor_home_page.dart';
+import 'package:lifelink/screens/home/app_shell.dart';
 import 'package:lifelink/screens/onboarding/welcome.dart';
 
 void main() {
@@ -12,7 +12,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomeGate());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: HomeGate());
   }
 }
 
@@ -33,7 +33,7 @@ class HomeGate extends StatelessWidget {
         }
 
         if (snapshot.data == true) {
-          return const DonorHomePage();
+          return const AppShell();
         }
 
         return Scaffold(

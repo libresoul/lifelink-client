@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifelink/core/network/api_client.dart';
 import 'package:lifelink/core/storage/session_store.dart';
 import 'package:lifelink/pages/editprofile.dart';
+import 'package:lifelink/pages/identity_card.dart';
 import 'package:lifelink/screens/onboarding/welcome.dart';
 
 class Profile extends StatefulWidget {
@@ -286,6 +287,42 @@ class _ProfileState extends State<Profile> {
                           ],
                         ),
                       ),
+                      SizedBox(height: 20),
+                      InkWell(
+                        onTap: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  IdentityCardPage(donor: donor),
+                            ),
+                          ),
+                        },
+                        borderRadius: BorderRadius.circular(10),
+                        child: Ink(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color.fromARGB(255, 244, 244, 244),
+                          ),
+                          padding: EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(Icons.credit_card),
+                              Text(
+                                "Identity card",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Icon(Icons.keyboard_arrow_right_outlined),
+                            ],
+                          ),
+                        ),
+                      ),
+
                       SizedBox(height: 20),
                       InkWell(
                         onTap: () => {

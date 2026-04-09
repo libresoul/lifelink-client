@@ -326,12 +326,20 @@ class _ProfileState extends State<Profile> {
                       SizedBox(height: 20),
                       InkWell(
                         onTap: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditProfile(),
-                            ),
-                          ),
+                          () async {
+                            final result = await Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfile(donor: donor),
+                              ),
+                            );
+
+                            if (result == true) {
+                              setState(() {
+                                _profileFuture = _loadProfile();
+                              });
+                            }
+                          }(),
                         },
                         borderRadius: BorderRadius.circular(10),
                         child: Ink(

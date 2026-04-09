@@ -5,6 +5,190 @@ import 'package:lifelink/core/network/api_client.dart';
 import 'package:lifelink/screens/explore_map.dart';
 import 'package:lifelink/core/storage/session_store.dart';
 import 'package:lifelink/screens/auth/login.dart';
+
+/// Shows a donation modal and records a donation via the API.
+/// If [onRecorded] is provided it will be called with the raw server row
+/// after a successful API call.
+Future<void> showDonateModal(
+  BuildContext context, {
+  Map<String, dynamic>? campaign,
+  void Function(Map<String, dynamic>)? onRecorded,
+}) async {
+  final volumeController = TextEditingController(text: '450');
+  final locationController = TextEditingController(
+    text: campaign != null ? (campaign['location'] as String? ?? '') : '',
+  );
+  final notesController = TextEditingController();
+  bool isSubmitting = false;
+
+  await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: StatefulBuilder(
+            builder: (context, setModalState) => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Record donation${campaign != null ? ' for ${campaign['title']}' : ''}',
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: volumeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'Volume (ml)'),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: locationController,
+                  decoration: const InputDecoration(labelText: 'Location'),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: notesController,
+                  decoration: const InputDecoration(
+                    labelText: 'Notes (optional)',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: isSubmitting
+                        ? null
+                        : () async {
+                            setModalState(() => isSubmitting = true);
+                            final store = SessionStore();
+                            var token = await store.getAccessToken();
+                            if (token == null) {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Login required'),
+                                  content: const Text(
+                                    'You need to be logged in to record a donation.',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                      child: const Text('Login'),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (result == true) {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const LoginPage(),
+                                  ),
+                                );
+                                token = await store.getAccessToken();
+                              }
+                            }
+
+                            if (token == null) {
+                              setModalState(() => isSubmitting = false);
+                              return;
+                            }
+
+                            final donatedAt = DateTime.now();
+                            final volume =
+                                int.tryParse(volumeController.text.trim()) ??
+                                450;
+                            final location = locationController.text.trim();
+                            final notes = notesController.text.trim();
+
+                            try {
+                              final api = ApiClient();
+                              final server = await api.createDonation(
+                                accessToken: token,
+                                donatedAt: donatedAt,
+                                volumeMl: volume,
+                                location: location.isEmpty ? null : location,
+                                campaignName: campaign != null
+                                    ? campaign['title'] as String?
+                                    : null,
+                                notes: notes.isEmpty ? null : notes,
+                                status: 'SUCCESS',
+                              );
+
+                              // Normalize server row
+                              Map<String, dynamic> serverRow = {};
+                              if (server is Map && server['donation'] != null) {
+                                serverRow = Map<String, dynamic>.from(
+                                  server['donation'] as Map,
+                                );
+                              } else if (server is Map) {
+                                serverRow = Map<String, dynamic>.from(
+                                  server as Map,
+                                );
+                              }
+
+                              if (onRecorded != null) onRecorded(serverRow);
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Donation recorded'),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Failed to record donation'),
+                                  ),
+                                );
+                              }
+                            } finally {
+                              setModalState(() => isSubmitting = false);
+                            }
+                          },
+                    child: isSubmitting
+                        ? const CircularProgressIndicator()
+                        : const Text('Record Donation'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
 // import 'package:lifelink/widgets/loading_button.dart';
 
 Widget campaignImage(
@@ -219,9 +403,15 @@ class _DonatePageState extends State<DonatePage>
                     vertical: 14,
                   ),
                 ),
-                onPressed: () => _openSchedule(context),
+                onPressed: () => showDonateModal(
+                  context,
+                  onRecorded: (row) {
+                    // when recorded, reload donations
+                    _loadDonations();
+                  },
+                ),
                 child: const Text(
-                  'Schedule New Donation',
+                  'Donate Now',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -711,50 +901,7 @@ class _DonatePageState extends State<DonatePage>
     );
   }
 
-  void _openSchedule(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Schedule new donation',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 10),
-            const Text('Pick a preferred center and time.'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                minimumSize: const Size.fromHeight(48),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Scheduling flow to be connected.'),
-                  ),
-                );
-              },
-              child: const Text('Continue'),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
+  // Scheduling flows removed in favor of direct donation recording.
 
   Future<String?> _requireAccessToken() async {
     final token = await _sessionStore.getAccessToken();
@@ -1152,10 +1299,16 @@ class CampaignDetailPage extends StatelessWidget {
                           vertical: 14,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () => showDonateModal(
+                        context,
+                        campaign: data['raw'] ?? data,
+                        onRecorded: (row) {
+                          // no-op here; user will see snackbar from modal
+                        },
+                      ),
                       icon: const Icon(Icons.bolt),
                       label: const Text(
-                        'Schedule Donation',
+                        'Donate Now',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -1336,9 +1489,9 @@ class HistoryDetailPage extends StatelessWidget {
                     vertical: 14,
                   ),
                 ),
-                onPressed: () => _openSchedule(context),
+                onPressed: () => showDonateModal(context),
                 child: const Text(
-                  'Schedule Next Donation',
+                  'Donate Now',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ),
@@ -1349,50 +1502,7 @@ class HistoryDetailPage extends StatelessWidget {
     );
   }
 
-  void _openSchedule(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Schedule new donation',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 10),
-            const Text('Pick a preferred center and time.'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                minimumSize: const Size.fromHeight(48),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Scheduling flow to be connected.'),
-                  ),
-                );
-              },
-              child: const Text('Continue'),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
+  // scheduling flows removed — use showDonateModal to record donations
 }
 
 class _WavePainter extends CustomPainter {

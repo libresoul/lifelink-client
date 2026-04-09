@@ -246,6 +246,39 @@ class ApiClient {
     return respBody;
   }
 
+  /// Fetch donations for the authenticated user
+  Future<List<Map<String, dynamic>>> getDonations({
+    required String accessToken,
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/donations');
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    final respBody = response.body.isNotEmpty
+        ? jsonDecode(response.body)
+        : null;
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      final message = respBody is Map && respBody['message'] != null
+          ? respBody['message'].toString()
+          : 'Failed to fetch donations';
+      throw Exception(message);
+    }
+
+    if (respBody is! Map || respBody['donations'] == null) {
+      return <Map<String, dynamic>>[];
+    }
+
+    final list = (respBody['donations'] as List)
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
+    return list;
+  }
+
   int _toInt(dynamic value) {
     if (value is int) {
       return value;

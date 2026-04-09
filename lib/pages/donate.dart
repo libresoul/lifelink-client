@@ -126,32 +126,9 @@ class _DonatePageState extends State<DonatePage>
     },
   ];
 
-  final List<Map<String, dynamic>> donations = [
-    {
-      'title': 'Central Medical Hub',
-      'amount': '450ml',
-      'date': 'October 24, 2023',
-      'status': 'SUCCESS',
-      'notes':
-          'Post-donation check: BP stable, hydrated well. Received thank-you badge for critical need support.',
-    },
-    {
-      'title': 'City Red Cross',
-      'amount': '500ml',
-      'date': 'August 12, 2023',
-      'status': 'SUCCESS',
-      'notes':
-          'First-time platelet donation at this center. Smooth process, scheduled follow-up in 3 months.',
-    },
-    {
-      'title': 'St. Jude Hospital',
-      'amount': '450ml',
-      'date': 'May 05, 2023',
-      'status': 'SUCCESS',
-      'notes':
-          'Helped replenish trauma wing inventory. Quick recovery with juice and snack provided.',
-    },
-  ];
+  // donations list will be loaded from server
+  final List<Map<String, dynamic>> donations = [];
+  bool _loadingDonations = false;
 
   late final AnimationController _waveController;
   late final Animation<double> _heartScale;
@@ -159,6 +136,7 @@ class _DonatePageState extends State<DonatePage>
   @override
   void initState() {
     super.initState();
+    _loadDonations();
     _waveController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
@@ -248,70 +226,129 @@ class _DonatePageState extends State<DonatePage>
   }
 
   Widget _historyTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 8),
-          const Text(
-            'Donation Journey',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 16),
-          _impactCard(),
-          const SizedBox(height: 20),
-          const Text(
-            'Past Donations',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 12),
-          ...donations.map((item) => _historyItem(item)).toList(),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+    return RefreshIndicator(
+      onRefresh: _loadDonations,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            const Text(
+              'Donation Journey',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
-            child: const Text(
-              "You're making a massive difference.\nReady for your next one?",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.black87, height: 1.3),
+            const SizedBox(height: 16),
+            _impactCard(),
+            const SizedBox(height: 20),
+            const Text(
+              'Past Donations',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 14,
-                ),
+            const SizedBox(height: 12),
+            if (_loadingDonations)
+              const Center(child: CircularProgressIndicator())
+            else if (donations.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: Center(child: Text('No donations yet.')),
+              )
+            else
+              ...donations.map((item) => _historyItem(item)).toList(),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              onPressed: () => _openSchedule(context),
               child: const Text(
-                'Schedule New Donation',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                "You're making a massive difference.\nReady for your next one?",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black87, height: 1.3),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
+                ),
+                onPressed: () => _openSchedule(context),
+                child: const Text(
+                  'Schedule New Donation',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Map<String, dynamic> _mapServerDonationToUi(Map<String, dynamic> row) {
+    final donatedAt = row['donated_at'] ?? row['created_at'] ?? '';
+    final dateStr = donatedAt is String ? donatedAt : donatedAt?.toString();
+    final volume = row['volume_ml']?.toString() ?? '';
+    String status = (row['status'] as String?)?.toLowerCase() ?? 'pending';
+    String uiStatus = 'PENDING';
+    if (status == 'completed' || status == 'success')
+      uiStatus = 'SUCCESS';
+    else if (status == 'pending')
+      uiStatus = 'PENDING';
+    else
+      uiStatus = status.toUpperCase();
+
+    return {
+      'id': row['id'],
+      'title': row['campaign_name'] ?? 'Donation',
+      'amount': '${volume}ml',
+      'date': dateStr,
+      'status': uiStatus,
+      'notes': row['notes'],
+      '_server': row,
+    };
+  }
+
+  Future<void> _loadDonations() async {
+    final token = await _sessionStore.getAccessToken();
+    if (token == null) return;
+
+    try {
+      if (mounted) setState(() => _loadingDonations = true);
+      final serverList = await _api.getDonations(accessToken: token);
+      if (mounted) {
+        setState(() {
+          donations.clear();
+          donations.addAll(serverList.map(_mapServerDonationToUi));
+        });
+      }
+    } catch (e) {
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load donations: ${e.toString()}')),
+        );
+    } finally {
+      if (mounted) setState(() => _loadingDonations = false);
+    }
   }
 
   Widget _searchField() {
@@ -870,25 +907,30 @@ class _DonatePageState extends State<DonatePage>
                                   status: 'SUCCESS',
                                 );
 
-                                // update optimistic entry (match by _local_id)
+                                // reconcile server response (server may return { donation: {...} } or the row)
+                                Map<String, dynamic> serverRow;
+                                if (server is Map &&
+                                    server['donation'] != null) {
+                                  serverRow = Map<String, dynamic>.from(
+                                    server['donation'] as Map,
+                                  );
+                                } else {
+                                  serverRow = Map<String, dynamic>.from(
+                                    server as Map,
+                                  );
+                                }
+
+                                final mapped = _mapServerDonationToUi(
+                                  serverRow,
+                                );
                                 setState(() {
                                   final idx = donations.indexWhere(
                                     (d) => d['_local_id'] == localId,
                                   );
                                   if (idx != -1) {
-                                    donations[idx] = {
-                                      'title':
-                                          server['campaign_name'] ??
-                                          donations[idx]['title'],
-                                      'amount':
-                                          '${server['volume_ml'] ?? volume}ml',
-                                      'date':
-                                          server['donated_at'] ??
-                                          donatedAt.toIso8601String(),
-                                      'status': server['status'] ?? 'SUCCESS',
-                                      'notes': server['notes'] ?? notes,
-                                      'id': server['id'],
-                                    };
+                                    donations[idx] = mapped;
+                                  } else {
+                                    donations.insert(0, mapped);
                                   }
                                 });
 

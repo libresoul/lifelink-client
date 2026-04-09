@@ -121,25 +121,32 @@ class _ProfileState extends State<Profile> {
                                 width: 1,
                               ),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${donor.stats.totalDonations}',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 20,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${donor.stats.totalDonations}',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 20,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  "TOTAL",
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  "DONATIONS",
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                ),
-                              ],
+                                  Text(
+                                    "TOTAL",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Text(
+                                    "DONATIONS",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Container(
@@ -153,21 +160,24 @@ class _ProfileState extends State<Profile> {
                                 width: 1,
                               ),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  donor.stats.lastDonationDate ?? '-',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w700,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    donor.stats.lastDonationDate ?? '-',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                                Text("LAST"),
-                                Text("DONATION"),
-                              ],
+                                  Text("LAST"),
+                                  Text("DONATION"),
+                                ],
+                              ),
                             ),
                           ),
                           Container(
@@ -181,19 +191,22 @@ class _ProfileState extends State<Profile> {
                                 width: 1,
                               ),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.location_on_rounded,
-                                  color: Colors.green,
-                                ),
-                                Text(
-                                  donor.district ?? '-',
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                              ],
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.location_on_rounded,
+                                    color: Colors.green,
+                                  ),
+                                  Text(
+                                    donor.district ?? '-',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

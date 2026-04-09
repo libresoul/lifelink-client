@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lifelink/core/network/api_client.dart';
+import 'package:lifelink/pages/donate.dart';
 import 'package:lifelink/core/storage/session_store.dart';
 
 class Homepage extends StatelessWidget {
@@ -22,11 +24,13 @@ class _HomeContentState extends State<_HomeContent> {
   final _api = ApiClient();
   final _sessionStore = SessionStore();
   late Future<DonorProfile> _profileFuture;
+  late Future<List<Map<String, dynamic>>> _campaignsFuture;
 
   @override
   void initState() {
     super.initState();
     _profileFuture = _loadProfile();
+    _campaignsFuture = _loadCampaigns();
   }
 
   Future<DonorProfile> _loadProfile() async {
@@ -36,6 +40,24 @@ class _HomeContentState extends State<_HomeContent> {
     }
 
     return _api.getMyDonorProfile(accessToken: token);
+  }
+
+  Future<List<Map<String, dynamic>>> _loadCampaigns() async {
+    try {
+      final serverList = await _api.getCampaigns();
+      final list = serverList.map((e) {
+        return {
+          'title': e['title'] ?? '',
+          'location': e['location'] ?? '',
+          'datetime': e['start_ts']?.toString() ?? '',
+          'image': e['image_url'] ?? '',
+          'raw': e,
+        };
+      }).toList();
+      return List<Map<String, dynamic>>.from(list);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
@@ -72,12 +94,13 @@ class _HomeContentState extends State<_HomeContent> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Welcome back',
-                      style: TextStyle(
+                      style: GoogleFonts.syne(
                         fontSize: 20,
                         color: Colors.grey,
                         height: 1.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Row(
@@ -85,9 +108,9 @@ class _HomeContentState extends State<_HomeContent> {
                       children: [
                         Text(
                           donor.fullName,
-                          style: const TextStyle(
-                            fontSize: 26,
-                            color: Colors.red,
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            color: Color(0xFFe71b34),
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -158,11 +181,22 @@ class _HomeContentState extends State<_HomeContent> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Row(
-                      children: const [
-                        Text('Your Donations'),
-                        Icon(Icons.arrow_right_outlined),
-                      ],
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DonatePage(initialIndex: 2),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: const [
+                          Text('Your Donations'),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_right_outlined),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Container(
@@ -236,6 +270,126 @@ class _HomeContentState extends State<_HomeContent> {
                           const SizedBox(height: 4),
                         ],
                       ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Nearby campaigns header
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DonatePage(initialIndex: 0),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            'Nearby campaigns',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Icon(Icons.arrow_right_outlined),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    FutureBuilder<List<Map<String, dynamic>>>(
+                      future: _campaignsFuture,
+                      builder: (context, csnap) {
+                        if (csnap.connectionState == ConnectionState.waiting) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        if (csnap.hasError ||
+                            csnap.data == null ||
+                            csnap.data!.isEmpty) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Center(child: Text('No nearby campaigns')),
+                          );
+                        }
+
+                        final list = csnap.data!;
+                        final preview = list.take(3).toList();
+                        return Column(
+                          children: preview.map((c) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        CampaignDetailPage(data: c['raw'] ?? c),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 64,
+                                      height: 64,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: (c['image'] as String).isNotEmpty
+                                          ? Image.network(
+                                              c['image'],
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) =>
+                                                  const Icon(
+                                                    Icons.image_not_supported,
+                                                  ),
+                                            )
+                                          : const Icon(
+                                              Icons.image,
+                                              color: Colors.black26,
+                                            ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            c['title'] ?? '',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            c['location'] ?? '',
+                                            style: const TextStyle(
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                      color: Colors.black26,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
                     ),
                   ],
                 ),

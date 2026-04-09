@@ -43,7 +43,8 @@ Widget campaignImage(
 }
 
 class DonatePage extends StatefulWidget {
-  const DonatePage({super.key});
+  final int initialIndex;
+  const DonatePage({super.key, this.initialIndex = 0});
 
   @override
   State<DonatePage> createState() => _DonatePageState();
@@ -94,6 +95,7 @@ class _DonatePageState extends State<DonatePage>
       removeTop: true,
       child: DefaultTabController(
         length: 3,
+        initialIndex: widget.initialIndex,
         child: Scaffold(
           backgroundColor: const Color(0xFFF6F7FB),
           appBar: AppBar(

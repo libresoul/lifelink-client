@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifelink/pages/home.dart';
 import 'package:lifelink/pages/profile.dart';
+import 'package:lifelink/pages/donate.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -14,14 +15,19 @@ class _AppShellState extends State<AppShell> {
 
   final List<Widget> pages = const [
     Homepage(),
-    Center(child: Text('Donate Page')),
+    // DonatePage is a separate screen; show it when Donate tab is tapped.
+    // We'll import it lazily in case the page depends on other things.
+    // Placeholder kept to preserve const list shape; actual widget is replaced in build.
+    SizedBox.shrink(),
     Profile(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final body = currentindex == 1 ? const DonatePage() : pages[currentindex];
+
     return Scaffold(
-      body: pages[currentindex],
+      body: body,
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           setState(() {

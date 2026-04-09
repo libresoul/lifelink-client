@@ -198,6 +198,54 @@ class ApiClient {
     );
   }
 
+  /// Create a donation record for the authenticated user.
+  /// Returns the parsed response body (server row) on success.
+  Future<Map<String, dynamic>> createDonation({
+    required String accessToken,
+    required DateTime donatedAt,
+    required int volumeMl,
+    String? location,
+    String? campaignName,
+    String? notes,
+    String status = 'SUCCESS',
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/donations');
+    final Map<String, dynamic> body = {
+      'donated_at': donatedAt.toIso8601String(),
+      'volume_ml': volumeMl,
+    };
+
+    if (location != null) body['location'] = location;
+    if (campaignName != null) body['campaign_name'] = campaignName;
+    if (notes != null) body['notes'] = notes;
+    if (status.isNotEmpty) body['status'] = status;
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(body),
+    );
+
+    final respBody = response.body.isNotEmpty
+        ? jsonDecode(response.body)
+        : null;
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      final message = respBody is Map && respBody['message'] != null
+          ? respBody['message'].toString()
+          : 'Failed to create donation';
+      throw Exception(message);
+    }
+
+    if (respBody is! Map<String, dynamic>) {
+      return <String, dynamic>{};
+    }
+
+    return respBody;
+  }
+
   int _toInt(dynamic value) {
     if (value is int) {
       return value;

@@ -2,9 +2,10 @@ import 'dart:math' as math;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lifelink/core/network/api_client.dart';
+import 'package:lifelink/screens/explore_map.dart';
 import 'package:lifelink/core/storage/session_store.dart';
 import 'package:lifelink/screens/auth/login.dart';
-import 'package:lifelink/widgets/loading_button.dart';
+// import 'package:lifelink/widgets/loading_button.dart';
 
 Widget campaignImage(
   String source, {
@@ -147,14 +148,7 @@ class _DonatePageState extends State<DonatePage>
   }
 
   Widget _exploreTab() {
-    return Container(
-      color: const Color(0xFFF6F7FB),
-      alignment: Alignment.center,
-      child: const Text(
-        'Explore is empty for now.',
-        style: TextStyle(color: Colors.grey),
-      ),
-    );
+    return const ExploreMap();
   }
 
   Widget _historyTab() {
@@ -901,8 +895,7 @@ class _DonatePageState extends State<DonatePage>
 
                                 // reconcile server response (server may return { donation: {...} } or the row)
                                 Map<String, dynamic> serverRow;
-                                if (server is Map &&
-                                    server['donation'] != null) {
+                                if (server['donation'] != null) {
                                   serverRow = Map<String, dynamic>.from(
                                     server['donation'] as Map,
                                   );

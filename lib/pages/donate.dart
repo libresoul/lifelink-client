@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lifelink/core/network/api_client.dart';
 import 'package:lifelink/core/storage/session_store.dart';
@@ -52,79 +53,9 @@ class _DonatePageState extends State<DonatePage>
   final _api = ApiClient();
   final _sessionStore = SessionStore();
   bool _creatingDonation = false;
-  final List<Map<String, dynamic>> campaigns = [
-    {
-      'title': 'Central City Hospital Blood Drive',
-      'location': '123 Medical Way, Suite 4',
-      'datetime': 'Oct 16, 08:00 AM - 04:00 PM',
-      'badge': 'High Urgency',
-      'image': 'assets/campaigns/campaign1.png',
-      'gallery': [
-        'assets/campaigns/campaign1.png',
-        'assets/campaigns/campaign2.png',
-        'assets/campaigns/campaign3.png',
-      ],
-      'description':
-          'City-wide blood drive focused on replenishing emergency reserves. Walk-ins are welcome; ID required.',
-    },
-    {
-      'title': 'Community Health Center',
-      'location': '406 Wellness Rd',
-      'datetime': 'Oct 19, 09:00 AM - 05:00 PM',
-      'badge': 'Medium Urgency',
-      'image': 'assets/campaigns/campaign2.png',
-      'gallery': [
-        'assets/campaigns/campaign2.png',
-        'assets/campaigns/campaign3.png',
-        'assets/campaigns/campaign4.png',
-      ],
-      'description':
-          'Community clinic hosting a day-long donation fair with on-site wellness checks and refreshments.',
-    },
-    {
-      'title': 'Westside Regional Mobile Unit',
-      'location': '785 Paradise Square',
-      'datetime': 'Oct 20, 10:00 AM - 05:30 PM',
-      'badge': 'Low Urgency',
-      'image': 'assets/campaigns/campaign3.png',
-      'gallery': [
-        'assets/campaigns/campaign3.png',
-        'assets/campaigns/campaign4.png',
-        'assets/campaigns/campaign5.png',
-      ],
-      'description':
-          'Mobile blood unit stationed at the plaza. Easy parking, quick 20-minute experience, and free snacks.',
-    },
-    {
-      'title': 'Lakeside University Drive',
-      'location': '40 Campus Loop, Hall B',
-      'datetime': 'Oct 22, 09:00 AM - 02:00 PM',
-      'badge': 'High Urgency',
-      'image': 'assets/campaigns/campaign4.png',
-      'gallery': [
-        'assets/campaigns/campaign4.png',
-        'assets/campaigns/campaign5.png',
-        'assets/campaigns/campaign1.png',
-      ],
-      'description':
-          'Student-organized drive supporting local hospitals ahead of the holiday season rush.',
-    },
-    {
-      'title': 'Harborview Community Hall',
-      'location': '11 Bayfront Ave',
-      'datetime': 'Oct 24, 11:00 AM - 06:00 PM',
-      'badge': 'Medium Urgency',
-      'image': 'assets/campaigns/campaign5.png',
-      'gallery': [
-        'assets/campaigns/campaign5.png',
-        'assets/campaigns/campaign1.png',
-        'assets/campaigns/campaign2.png',
-      ],
-      'description':
-          'Neighborhood-led campaign with kids'
-          ' corner, food trucks, and nurse-led eligibility guidance.',
-    },
-  ];
+  // campaigns will be loaded from the server
+  final List<Map<String, dynamic>> campaigns = [];
+  bool _loadingCampaigns = false;
 
   // donations list will be loaded from server
   final List<Map<String, dynamic>> donations = [];
@@ -137,6 +68,7 @@ class _DonatePageState extends State<DonatePage>
   void initState() {
     super.initState();
     _loadDonations();
+    _loadCampaigns();
     _waveController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
@@ -348,6 +280,66 @@ class _DonatePageState extends State<DonatePage>
         );
     } finally {
       if (mounted) setState(() => _loadingDonations = false);
+    }
+  }
+
+  Map<String, dynamic> _mapCampaignToUi(Map<String, dynamic> row) {
+    // parse gallery (could be stored as jsonb array or text)
+    List<String> gallery = [];
+    try {
+      final g = row['gallery'];
+      if (g is List)
+        gallery = g.cast<String>();
+      else if (g is String) {
+        // stored as JSON text
+        gallery = (g.isNotEmpty)
+            ? List<String>.from(jsonDecode(g))
+            : <String>[];
+      }
+    } catch (_) {
+      gallery = <String>[];
+    }
+
+    final start = row['start_ts'] != null
+        ? DateTime.tryParse(row['start_ts'].toString())
+        : null;
+    final end = row['end_ts'] != null
+        ? DateTime.tryParse(row['end_ts'].toString())
+        : null;
+    final datetime = start == null
+        ? ''
+        : (end == null
+              ? '${start.toLocal()}'
+              : '${start.toLocal()} - ${end.toLocal()}');
+
+    return {
+      'title': row['title'] ?? 'Campaign',
+      'location': row['location'] ?? '',
+      'datetime': datetime,
+      'badge': row['badge'] ?? '',
+      'image': row['image_url'] ?? '',
+      'gallery': gallery,
+      'description': row['description'] ?? '',
+      'raw': row,
+    };
+  }
+
+  Future<void> _loadCampaigns() async {
+    try {
+      if (mounted) setState(() => _loadingCampaigns = true);
+      final list = await _api.getCampaigns();
+      if (mounted)
+        setState(() {
+          campaigns.clear();
+          campaigns.addAll(list.map(_mapCampaignToUi));
+        });
+    } catch (e) {
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load campaigns: ${e.toString()}')),
+        );
+    } finally {
+      if (mounted) setState(() => _loadingCampaigns = false);
     }
   }
 
